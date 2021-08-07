@@ -129,8 +129,14 @@ ORDER BY count(rental.customer_id) DESC;
 
 --23.How much revenue has one single store made over PG13 and R-rated films?
 
-SELECT extract(month FROM payment_date) , sum(amount) AS Total_Revenue_For_Each_month FROM payment
-GROUP BY extract(MONTH FROM payment_date);
+SELECT staff.store_id, sum(amount) AS Total_Revenue_For_Each_Store_For_PG13_And_R_Films FROM payment
+INNER JOIN staff ON  payment.staff_id = staff.staff_id
+INNER JOIN rental ON payment.rental_id = rental.rental_id
+INNER JOIN inventory ON inventory.inventory_id = rental.inventory_id
+INNER JOIN film ON film.film_id = inventory.film_id
+WHERE film.rating = 'PG-13' OR film.rating ='R'
+GROUP BY staff.store_id 
+ORDER BY sum(amount) ASC;
 
 --24.Active User where active = 1
 
